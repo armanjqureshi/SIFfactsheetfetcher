@@ -1,0 +1,25 @@
+# MySQL database for running the app locally.
+# Start:  docker compose up -d
+# Stop:   docker compose down        (your data is kept)
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: sif-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: sif
+      MYSQL_USER: sif
+      MYSQL_PASSWORD: sif
+      MYSQL_ROOT_PASSWORD: sif-root
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - sif-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-usif", "-psif"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  sif-mysql-data:

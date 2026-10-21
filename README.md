@@ -2,6 +2,8 @@
 
 React / Express / tRPC / Drizzle starter, adapted from the Sandbox web-db-user template.
 
+**Run it on your own computer:** see [LOCAL_SETUP.md](LOCAL_SETUP.md). Local mode (`LOCAL_MODE=true`) replaces Manus login and storage with an automatic local user and a local PDF folder.
+
 - `pnpm dev`: development server; honors `PORT` (default 3000).
 - `pnpm build` / `pnpm start`: build and serve `dist/index.js` and `dist/public/`.
 - `pnpm db:migrate`: apply checked-in migrations. `pnpm db:push`: generate and apply new schema changes.

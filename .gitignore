@@ -101,6 +101,9 @@ jspm_packages/
 tmp/
 temp/
 
+# Local mode PDF storage
+data/
+
 # Database
 *.db
 *.sqlite

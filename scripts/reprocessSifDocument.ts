@@ -2,7 +2,8 @@ import { createHash } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { sifDocumentVersions } from "../drizzle/schema";
 import { getDb } from "../server/db";
-import { storageGetSignedUrl } from "../server/storage";
+import "dotenv/config";
+import { storageGetBytes } from "../server/storage";
 import { parseSifPdf, sectionHash } from "../server/sif/parser";
 import {
   createFactWithEvidence,
@@ -26,10 +27,7 @@ if (!document?.storageKey || !document.sourceId) throw new Error("Document has n
 const context = await getSourceWithContext(document.sourceId);
 if (!context?.product) throw new Error("Document source has no SIF product context");
 
-const signedUrl = await storageGetSignedUrl(document.storageKey);
-const response = await fetch(signedUrl);
-if (!response.ok) throw new Error(`Cached PDF read failed (${response.status})`);
-const bytes = Buffer.from(await response.arrayBuffer());
+const bytes = await storageGetBytes(document.storageKey);
 const hash = createHash("sha256").update(bytes).digest("hex");
 if (hash !== document.contentSha256) throw new Error("Cached PDF hash does not match its immutable document record");
 const parsed = await parseSifPdf(bytes);

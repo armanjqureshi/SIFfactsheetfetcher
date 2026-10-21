@@ -2,7 +2,10 @@
 // Uploads via Forge Server presigned URL to S3 (PUT direct).
 // Downloads return /manus-storage/{key} paths served via 307 redirect.
 
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
 import { ENV } from "./_core/env";
+import { resolveLocalStoragePath } from "./_core/localMode";
 
 function getForgeConfig() {
   const forgeUrl = ENV.forgeApiUrl;
@@ -33,6 +36,14 @@ export async function storagePut(
   data: Buffer | Uint8Array | string,
   contentType = "application/octet-stream",
 ): Promise<{ key: string; url: string }> {
+  if (ENV.localMode) {
+    const key = appendHashSuffix(normalizeKey(relKey));
+    const filePath = resolveLocalStoragePath(key);
+    await mkdir(path.dirname(filePath), { recursive: true });
+    await writeFile(filePath, typeof data === "string" ? Buffer.from(data) : data);
+    return { key, url: `/manus-storage/${key}` };
+  }
+
   const { forgeUrl, forgeKey } = getForgeConfig();
   const key = appendHashSuffix(normalizeKey(relKey));
 
@@ -76,7 +87,19 @@ export async function storageGet(relKey: string): Promise<{ key: string; url: st
   return { key, url: `/manus-storage/${key}` };
 }
 
+// Read a stored file's bytes in either mode (local disk or Manus storage).
+export async function storageGetBytes(relKey: string): Promise<Buffer> {
+  const key = normalizeKey(relKey);
+  if (ENV.localMode) return readFile(resolveLocalStoragePath(key));
+  const response = await fetch(await storageGetSignedUrl(key));
+  if (!response.ok) throw new Error(`Stored file read failed (${response.status})`);
+  return Buffer.from(await response.arrayBuffer());
+}
+
 export async function storageGetSignedUrl(relKey: string): Promise<string> {
+  if (ENV.localMode) {
+    throw new Error("Signed URLs are not available in local mode; use storageGetBytes instead");
+  }
   const { forgeUrl, forgeKey } = getForgeConfig();
   const key = normalizeKey(relKey);
 

@@ -9,4 +9,8 @@ export const ENV = {
   get isProduction() { return process.env.NODE_ENV === "production"; },
   get forgeApiUrl() { return process.env.MANUS_API_URL ?? ""; },
   get forgeApiKey() { return process.env.MANUS_API_KEY ?? ""; },
+  // Local mode: run on your own computer without Manus login or Manus storage.
+  get localMode() { return process.env.LOCAL_MODE === "true"; },
+  get localUserName() { return process.env.LOCAL_USER_NAME?.trim() || "Local user"; },
+  get localStorageDir() { return process.env.LOCAL_STORAGE_DIR?.trim() || "data/storage"; },
 };
