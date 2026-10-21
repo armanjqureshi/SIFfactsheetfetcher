@@ -2,6 +2,7 @@ import type { CreateExpressContextOptions } from "@trpc/server/adapters/express"
 import type { User } from "../../drizzle/schema";
 import { ENV } from "./env";
 import { getLocalUser } from "./localMode";
+import { passwordRequired, requestHasPasswordSession } from "./passwordGate";
 import { sdk } from "./sdk";
 
 export type TrpcContext = {
@@ -16,7 +17,12 @@ export async function createContext(
   let user: User | null = null;
 
   try {
-    user = ENV.localMode ? await getLocalUser() : await sdk.authenticateRequest(opts.req);
+    if (ENV.localMode) {
+      const allowed = !passwordRequired() || (await requestHasPasswordSession(opts.req));
+      user = allowed ? await getLocalUser() : null;
+    } else {
+      user = await sdk.authenticateRequest(opts.req);
+    }
   } catch (error) {
     if (ENV.localMode) console.error("[Local mode] Could not load the local user:", error);
     // Authentication is optional for public procedures.

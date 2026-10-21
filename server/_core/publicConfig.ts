@@ -6,6 +6,7 @@ export function publicPlatformConfig(env: NodeJS.ProcessEnv = process.env) {
     apiUrl: env.MANUS_API_URL ?? "",
     apiBrowserKey: env.MANUS_API_BROWSER_KEY ?? "",
     localMode: env.LOCAL_MODE === "true",
+    passwordLogin: env.LOCAL_MODE === "true" && Boolean(env.APP_PASSWORD),
   };
 }
 

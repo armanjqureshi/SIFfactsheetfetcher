@@ -13,10 +13,10 @@ export { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
 // with "invalid oauth state". It returns void by design, so there is no URL to
 // stash across renders.
 export const startLogin = () => {
-  // Local mode has no login provider: the server signs you in automatically,
-  // so "signing in" is just reloading the app.
+  // Local mode has no login provider: either the password screen (when APP_PASSWORD
+  // is set) or automatic sign-in, so "signing in" is a page load.
   if (window.__MANUS_CONFIG__?.localMode) {
-    window.location.assign("/");
+    window.location.assign(window.__MANUS_CONFIG__.passwordLogin ? "/login" : "/");
     return;
   }
   const oauthPortalUrl = window.__MANUS_CONFIG__?.oauthPortalUrl;
