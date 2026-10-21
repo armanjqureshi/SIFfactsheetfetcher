@@ -1,0 +1,1 @@
+{"routes":[{"path":"/","title":"SIF Library"},{"path":"/reader/:documentId","title":"Document Reader"},{"path":"/comparison","title":"Strategy Comparison"},{"path":"/sources","title":"Official Sources"}]}
