@@ -21,7 +21,7 @@ This gives the app a public link with a password screen. Railway builds it from 
 | `DATABASE_URL` | `${{MySQL.MYSQL_URL}}` (Railway fills in the database's private address) |
 | `RUN_MIGRATIONS` | `true` (creates and updates the database tables on each start) |
 | `LOCAL_STORAGE_DIR` | `/data/storage` |
-| `LOCAL_USER_NAME` | The name shown in the app's top-right corner, e.g. `1 Finance` |
+| `LOCAL_USER_NAME` | The name shown in the app's top-right corner. Only the first word shows, so use one word, e.g. `Team` |
 
 Railway sets `PORT` itself. Don't set `HOST`.
 
