@@ -125,7 +125,7 @@ CREATE TABLE `sif_provider_sources` (
 	`created_at` timestamp NOT NULL DEFAULT (now()),
 	`updated_at` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT `sif_provider_sources_id` PRIMARY KEY(`id`),
-	CONSTRAINT `sif_sources_url_uq` UNIQUE(`listing_url`)
+	CONSTRAINT `sif_sources_url_uq` UNIQUE(`listing_url`(768))
 );
 --> statement-breakpoint
 CREATE TABLE `sif_providers` (

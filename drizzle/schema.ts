@@ -134,6 +134,7 @@ export const sifProviderSources = mysqlTable(
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
   },
   (table) => [
+    // The SQL migration indexes only the first 768 characters: MySQL 8 caps keys at 3,072 bytes.
     uniqueIndex("sif_sources_url_uq").on(table.listingUrl),
     index("sif_sources_provider_family_idx").on(table.providerId, table.documentFamily),
   ],
