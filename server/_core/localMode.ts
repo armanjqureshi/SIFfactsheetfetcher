@@ -42,6 +42,7 @@ export function resolveLocalStoragePath(key: string): string {
 export function registerLocalStorageRoutes(app: Express) {
   app.use(
     "/manus-storage",
-    express.static(localStorageRoot(), { fallthrough: false, index: false, dotfiles: "deny" }),
+    express.static(localStorageRoot(), { index: false, dotfiles: "deny", redirect: false }),
+    (_req: express.Request, res: express.Response) => { res.status(404).send("File not found"); },
   );
 }
